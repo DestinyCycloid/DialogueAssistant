@@ -1,0 +1,57 @@
+﻿<Window x:Class="DialogueAssistant.Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="DialogueAssistant" Height="720" Width="1080" MinHeight="560" MinWidth="800">
+    <Grid Margin="18">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="DialogueAssistant" FontSize="24" FontWeight="SemiBold" />
+        <DockPanel Grid.Row="1" Margin="0,16,0,8">
+            <Button DockPanel.Dock="Right" Content="刷新窗口" Command="{Binding RefreshWindowsCommand}" Padding="14,7" Margin="8,0,0,0" />
+            <Button DockPanel.Dock="Right" Content="停止自动剧情" Command="{Binding StopCommand}" IsEnabled="{Binding IsRunning, Mode=OneWay}" Padding="14,7" Margin="8,0,0,0" />
+            <Button DockPanel.Dock="Right" Content="启动自动剧情" Command="{Binding StartCommand}" Padding="14,7" Margin="8,0,0,0" />
+            <Button DockPanel.Dock="Right" Content="捕获画面" Command="{Binding CaptureCommand}" Padding="14,7" />
+            <ComboBox ItemsSource="{Binding Windows, Mode=OneWay}" SelectedItem="{Binding SelectedWindow, Mode=TwoWay}"
+                      DisplayMemberPath="Title" VerticalContentAlignment="Center" />
+        </DockPanel>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,12" VerticalAlignment="Center">
+            <CheckBox Content="自动快进无选项对话" IsChecked="{Binding QuickSkipEnabled, Mode=TwoWay}" VerticalAlignment="Center" />
+            <TextBlock Text="选项策略：" Margin="24,0,6,0" VerticalAlignment="Center" />
+            <ComboBox Width="150" SelectedIndex="{Binding SelectedOptionIndex, Mode=TwoWay}">
+                <ComboBoxItem Content="选择第一个" />
+                <ComboBoxItem Content="随机选择" />
+                <ComboBoxItem Content="选择最后一个" />
+                <ComboBoxItem Content="不选择" />
+            </ComboBox>
+            <TextBlock Text="点击前延迟(ms)：" Margin="20,0,6,0" VerticalAlignment="Center" />
+            <TextBox Width="72" Text="{Binding AfterChooseOptionDelayMilliseconds, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     VerticalContentAlignment="Center" ToolTip="0–10000 毫秒；仅应用于选项点击" />
+        </StackPanel>
+        <Border Grid.Row="3" BorderBrush="#FFB8B8B8" BorderThickness="1" Background="#FF171717">
+            <Grid>
+                <Image Source="{Binding PreviewImage, Mode=OneWay}" Stretch="Uniform" />
+                <TextBlock Text="请选择目标窗口并捕获画面" Foreground="White" FontSize="18"
+                           HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding PreviewImage}" Value="{x:Null}">
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+            </Grid>
+        </Border>
+        <Border Grid.Row="4" Margin="0,12,0,0" Padding="10" Background="#FFF2F4F7" CornerRadius="4">
+            <TextBlock Text="{Binding StatusText, Mode=OneWay}" TextWrapping="Wrap" />
+        </Border>
+    </Grid>
+</Window>
